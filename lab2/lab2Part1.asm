@@ -27,6 +27,7 @@ main:
 			beq $t3, $zero, STRLENEND
 			addi $t1, $t1, 1
 		j STRLEN
+
 ##########################################################
 	STRLENEND: 
 		 subi $t1, $t1, 1

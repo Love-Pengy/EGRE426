@@ -1,2 +1,2 @@
-INFO: [VRFC 10-163] Analyzing VHDL file "H:/EGRE426/lab3/lab3.srcs/sim_1/new/1bitAdderTB.vhd" into library xil_defaultlib
-INFO: [VRFC 10-3107] analyzing entity 'adderTB'
+INFO: [VRFC 10-163] Analyzing VHDL file "H:/EGRE426/lab3/lab3.srcs/sources_1/new/nBitAdder.vhd" into library xil_defaultlib
+INFO: [VRFC 10-3107] analyzing entity 'nBitAdder'

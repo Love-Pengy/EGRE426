@@ -1,0 +1,1 @@
+--incr --debug "typical" --relax --mt "2" -L "xil_defaultlib" -L "secureip" --snapshot "nBitAdder_behav" "xil_defaultlib.nBitAdder" -log "elaborate.log" 

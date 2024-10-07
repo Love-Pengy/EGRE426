@@ -36,14 +36,18 @@ architecture Behavioral of onebitAdder is
 begin
 
 process(A, B, Cin)
+    variable x1 : std_logic;
     begin
-        C <= A XOR B XOR Cin;
-        if((NOT A AND NOT B AND NOT Cin) = '1') then 
-            Cout <= '0';
-        elsif((A AND B AND Cin) = '1') then
-            Cout <= '1';
-        else
-            Cout <= A XNOR B XNOR Cin;
-        end if;
+--        if((NOT A AND NOT B AND NOT Cin) = '1') then 
+--            Cout <= '0';
+--        elsif((A AND B AND Cin) = '1') then
+--            Cout <= '1';
+--        else
+--            Cout <= A XNOR B XNOR Cin;
+--        end if;
+        x1 := A XOR B;
+        C <= x1 XOR Cin;
+        Cout <= (A AND B) OR (x1 AND CIN);
     end process;
+    
 end Behavioral;

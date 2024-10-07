@@ -1,13 +1,1 @@
 Time resolution is 1 ps
-Error: Cout value is incorrect.
-Time: 50 ns  Iteration: 0  Process: /adderTB/monitor  File: H:/EGRE426/lab3/lab3.srcs/sim_1/new/1bitAdderTB.vhd
-Error: Cout value is incorrect.
-Time: 90 ns  Iteration: 0  Process: /adderTB/monitor  File: H:/EGRE426/lab3/lab3.srcs/sim_1/new/1bitAdderTB.vhd
-Error: Cout value is incorrect.
-Time: 130 ns  Iteration: 0  Process: /adderTB/monitor  File: H:/EGRE426/lab3/lab3.srcs/sim_1/new/1bitAdderTB.vhd
-Error: Cout value is incorrect.
-Time: 170 ns  Iteration: 0  Process: /adderTB/monitor  File: H:/EGRE426/lab3/lab3.srcs/sim_1/new/1bitAdderTB.vhd
-Error: Cout value is incorrect.
-Time: 210 ns  Iteration: 0  Process: /adderTB/monitor  File: H:/EGRE426/lab3/lab3.srcs/sim_1/new/1bitAdderTB.vhd
-Error: Cout value is incorrect.
-Time: 250 ns  Iteration: 0  Process: /adderTB/monitor  File: H:/EGRE426/lab3/lab3.srcs/sim_1/new/1bitAdderTB.vhd

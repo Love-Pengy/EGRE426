@@ -3,47 +3,47 @@
    <wave_state>
    </wave_state>
    <db_ref_list>
-      <db_ref path="nBitAdder_behav.wdb" id="1">
+      <db_ref path="nBitAdderTB_behav.wdb" id="1">
          <top_modules>
-            <top_module name="nBitAdder" />
+            <top_module name="nBitAdderTB" />
          </top_modules>
       </db_ref>
    </db_ref_list>
    <zoom_setting>
-      <ZoomStartTime time="7.500 ns"></ZoomStartTime>
-      <ZoomEndTime time="46.501 ns"></ZoomEndTime>
-      <Cursor1Time time="27.050 ns"></Cursor1Time>
+      <ZoomStartTime time="0.000 ns"></ZoomStartTime>
+      <ZoomEndTime time="143.901 ns"></ZoomEndTime>
+      <Cursor1Time time="46.947 ns"></Cursor1Time>
    </zoom_setting>
    <column_width_setting>
       <NameColumnWidth column_width="139"></NameColumnWidth>
-      <ValueColumnWidth column_width="112"></ValueColumnWidth>
+      <ValueColumnWidth column_width="108"></ValueColumnWidth>
    </column_width_setting>
    <WVObjectSize size="6" />
-   <wvobject fp_name="/nBitAdder/A" type="array">
-      <obj_property name="ElementShortName">A[31:0]</obj_property>
-      <obj_property name="ObjectShortName">A[31:0]</obj_property>
+   <wvobject fp_name="/nBitAdderTB/A_sig" type="array">
+      <obj_property name="ElementShortName">A_sig[31:0]</obj_property>
+      <obj_property name="ObjectShortName">A_sig[31:0]</obj_property>
       <obj_property name="Radix">SIGNEDDECRADIX</obj_property>
    </wvobject>
-   <wvobject fp_name="/nBitAdder/B" type="array">
-      <obj_property name="ElementShortName">B[31:0]</obj_property>
-      <obj_property name="ObjectShortName">B[31:0]</obj_property>
+   <wvobject fp_name="/nBitAdderTB/B_sig" type="array">
+      <obj_property name="ElementShortName">B_sig[31:0]</obj_property>
+      <obj_property name="ObjectShortName">B_sig[31:0]</obj_property>
       <obj_property name="Radix">SIGNEDDECRADIX</obj_property>
    </wvobject>
-   <wvobject fp_name="/nBitAdder/Cin" type="logic">
-      <obj_property name="ElementShortName">Cin</obj_property>
-      <obj_property name="ObjectShortName">Cin</obj_property>
-   </wvobject>
-   <wvobject fp_name="/nBitAdder/C" type="array">
-      <obj_property name="ElementShortName">C[31:0]</obj_property>
-      <obj_property name="ObjectShortName">C[31:0]</obj_property>
+   <wvobject fp_name="/nBitAdderTB/C_sig" type="array">
+      <obj_property name="ElementShortName">C_sig[31:0]</obj_property>
+      <obj_property name="ObjectShortName">C_sig[31:0]</obj_property>
       <obj_property name="Radix">SIGNEDDECRADIX</obj_property>
    </wvobject>
-   <wvobject fp_name="/nBitAdder/Cout" type="logic">
-      <obj_property name="ElementShortName">Cout</obj_property>
-      <obj_property name="ObjectShortName">Cout</obj_property>
+   <wvobject fp_name="/nBitAdderTB/Overflow_sig" type="logic">
+      <obj_property name="ElementShortName">Overflow_sig</obj_property>
+      <obj_property name="ObjectShortName">Overflow_sig</obj_property>
    </wvobject>
-   <wvobject fp_name="/nBitAdder/Overflow" type="logic">
-      <obj_property name="ElementShortName">Overflow</obj_property>
-      <obj_property name="ObjectShortName">Overflow</obj_property>
+   <wvobject fp_name="/nBitAdderTB/Cout_sig" type="logic">
+      <obj_property name="ElementShortName">Cout_sig</obj_property>
+      <obj_property name="ObjectShortName">Cout_sig</obj_property>
+   </wvobject>
+   <wvobject fp_name="/nBitAdderTB/Cin_sig" type="logic">
+      <obj_property name="ElementShortName">Cin_sig</obj_property>
+      <obj_property name="ObjectShortName">Cin_sig</obj_property>
    </wvobject>
 </wave_config>

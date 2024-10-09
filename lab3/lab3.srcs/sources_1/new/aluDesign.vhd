@@ -48,32 +48,67 @@ entity ALU is
 end ALU;
 
 architecture Behavioral of ALU is
-    signal carry : std_logic_vector(N-1 downto 0);
+
+    signal addOutput, twoOutput, subOutput, bitOutput: std_logic_vector(31 downto 0);
+    signal addCout, addOverflow, twoCout, twoOverflow, subCout, subOverflow: std_logic := '0';
+    COMPONENT nBitAdder
+        PORT (
+            A, B: in std_logic_vector(31 downto 0);
+            Cin: in std_logic;
+            Cout, Overflow: out std_logic;
+            C: out std_logic_vector(31 downto 0));
+    END COMPONENT;
     
     
     begin
-       
-    process(A, B, Mode)
+    
+    adder: nBitAdder
+      PORT MAP(A => A, B => B, Cin => '0', C => addOutput, Overflow => addOverflow, Cout => addCout);
+    twosCompliment: nBitAdder
+      PORT MAP(A => A, B => (NOT B), Cin => '1', C => subOutput, Overflow => subOverflow, Cout => subCout);
+    
+    process(A, B, Mode,addOverflow,addOutput,subOverflow,subCout,subOutput)
         begin
         case Mode is
             when "000" =>
-                 
-                  C <= std_logic_vector(adderC(31 downto 0));
-                  if(adderC = B"0000_0000_0000_0000_0000_0000_0000_0000") then 
-                    Zero <= '1'; 
-                  else 
+              C <= addOutput;
+              if(addOutput = B"0000_0000_0000_0000_0000_0000_0000_0000") then
+                Zero <= '1';
+              else 
+                Zero <= '0';
+              end if;
+              Cout <= addCout;
+              Overflow <= addOverflow;
+            when "001" => 
+              C <= subOutput;
+              if(subOutput = B"0000_0000_0000_0000_0000_0000_0000_0000") then
+                Zero <= '1';
+              else 
+                Zero <= '0';
+              end if;
+              Cout <= subCout;
+              Overflow <= subOverflow;
+            when "010" => 
+                bitOutput <= A AND B;
+                if(bitOutput = B"0000_0000_0000_0000_0000_0000_0000_0000") then 
+                    Zero <= '1';
+                else 
                     Zero <= '0';
-                  end if;
-                  Cout <= adderC(32);
-                  if((A(31) AND B(31) AND (NOT adderC(31))) = '1')then 
-                    overflow <= '1';
-                  elsif(((NOT A(31)) AND (NOT B(31)) AND adderC(31)) = '1') then
-                    overflow <= '1';
-                  else 
-                    overflow <= '0';
-                  end if;
-              
-             when others => 
+                end if;
+                C <= bitOutput;
+                Overflow <= '0';
+                Cout <= '0';
+            when "011" =>
+                bitOutput <= A OR B;
+                if(bitOutput = B"0000_0000_0000_0000_0000_0000_0000_0000") then 
+                    Zero <= '1';
+                else 
+                    Zero <= '0';
+                end if;
+                C <= bitOutput;
+                Overflow <= '0';
+                Cout <= '0';
+            when others => 
                 
         end case; 
     

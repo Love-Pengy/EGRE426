@@ -2,10 +2,10 @@ library IEEE;
 use IEEE.std_logic_1164.all;
 use IEEE.numeric_std.all;
 
-entity ALUAdderTB is
+entity adderTB is
 end entity;
 
-architecture behavior of ALUAdderTB is
+architecture behavior of adderTB is
   constant TIME_DELAY : time := 20 ns;
   constant NUM_VALS : integer := 6;
 

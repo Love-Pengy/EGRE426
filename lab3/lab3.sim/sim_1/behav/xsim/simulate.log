@@ -1,5 +1,13 @@
 Time resolution is 1 ps
 Error: Cout value is incorrect.
-Time: 55 ns  Iteration: 0  Process: /nBitAdderTB/monitor  File: H:/EGRE426/lab3/lab3.srcs/sim_1/new/nBitAdderTB.vhd
+Time: 175 ns  Iteration: 0  Process: /ALUTB/monitor  File: H:/EGRE426/lab3/lab3.srcs/sim_1/new/ALUTB.vhd
+Error: C value is incorrect.
+Time: 215 ns  Iteration: 0  Process: /ALUTB/monitor  File: H:/EGRE426/lab3/lab3.srcs/sim_1/new/ALUTB.vhd
+Error: C value is incorrect.
+Time: 235 ns  Iteration: 0  Process: /ALUTB/monitor  File: H:/EGRE426/lab3/lab3.srcs/sim_1/new/ALUTB.vhd
 Error: Cout value is incorrect.
-Time: 75 ns  Iteration: 0  Process: /nBitAdderTB/monitor  File: H:/EGRE426/lab3/lab3.srcs/sim_1/new/nBitAdderTB.vhd
+Time: 235 ns  Iteration: 0  Process: /ALUTB/monitor  File: H:/EGRE426/lab3/lab3.srcs/sim_1/new/ALUTB.vhd
+Error: Zero value is incorrect.
+Time: 235 ns  Iteration: 0  Process: /ALUTB/monitor  File: H:/EGRE426/lab3/lab3.srcs/sim_1/new/ALUTB.vhd
+Error: Cout value is incorrect.
+Time: 175 ns  Iteration: 0  Process: /ALUTB/monitor  File: H:/EGRE426/lab3/lab3.srcs/sim_1/new/ALUTB.vhd

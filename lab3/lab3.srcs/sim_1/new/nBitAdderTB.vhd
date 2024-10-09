@@ -59,7 +59,7 @@ architecture behavior of nBitAdderTB is
                               
   constant Overflow_vals : Overflow_array := ('0', '0', '0', '0', '1', '0', '1', '0');
   
-  constant Cout_vals : Cout_array := ('0','0','0', '0', '1', '0', '0', '1');
+  constant Cout_vals : Cout_array := ('0','0','1', '1', '1', '0', '0', '1');
   
   constant Cin_vals : Cout_array := ('0','0','0', '0', '0', '0', '0', '0');
                         

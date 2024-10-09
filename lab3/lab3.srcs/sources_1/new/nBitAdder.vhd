@@ -1,6 +1,6 @@
 ----------------------------------------------------------------------------------
 -- Company: 
--- Engineer: 
+-- Engineer: Brandon Frazier
 -- 
 -- Create Date: 10/07/2024 01:19:46 PM
 -- Design Name: 
@@ -40,7 +40,7 @@ architecture Behavioral of nBitAdder is
       A, B, Cin: in std_logic;    
       Cout, C: out std_logic);    
   end COMPONENT;   
-  signal carry,cAns : std_logic_vector(N-1 downto 0);        
+  signal carry,cAns : std_logic_vector(N-1 downto 0) := (others => '0');        
   
 begin
   zeroBitAdder: oneBitAdder

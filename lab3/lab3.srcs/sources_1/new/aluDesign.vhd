@@ -19,7 +19,7 @@
 ----------------------------------------------------------------------------------
 library IEEE;
 use IEEE.std_logic_1164.ALL;
-
+use ieee.numeric_std.ALL;
 entity ALU is
 
     generic(N : integer := 32);
@@ -49,7 +49,7 @@ end ALU;
 
 architecture Behavioral of ALU is
 
-    signal addOutput, twoOutput, subOutput, bitOutput: std_logic_vector(31 downto 0);
+    signal addOutput, twoOutput, shiftOutput, subOutput, bitOutput, shiftIndex: std_logic_vector(31 downto 0);
     signal addCout, addOverflow, twoCout, twoOverflow, subCout, subOverflow: std_logic := '0';
     COMPONENT nBitAdder
         PORT (
@@ -64,10 +64,19 @@ architecture Behavioral of ALU is
     
     adder: nBitAdder
       PORT MAP(A => A, B => B, Cin => '0', C => addOutput, Overflow => addOverflow, Cout => addCout);
-    twosCompliment: nBitAdder
-      PORT MAP(A => A, B => (NOT B), Cin => '1', C => subOutput, Overflow => subOverflow, Cout => subCout);
+      
+    subtractor: nBitAdder
+      PORT MAP(A => A, B => twoOutput, Cin => '0', C => subOutput, Overflow => subOverflow, Cout => subCout);
+      
+    -- open (https://stackoverflow.com/questions/19412165/how-to-ignore-output-ports-with-port-maps)
+    twoCompliment: nBitAdder
+      PORT MAP(A => X"00000001", B => (NOT B), Cin => '0', C => twoOutput, Overflow => open, Cout => open);
     
-    process(A, B, Mode,addOverflow,addOutput,subOverflow,subCout,subOutput)
+    shiftCalc: nBitAdder
+      PORT MAP(A => X"0000001F", B => twoOutput, Cin => '0', C => shiftIndex, Overflow => open, Cout => open);
+      
+    process(A, B, Mode,addOverflow,addOutput,subOverflow,subCout,subOutput, bitOutput)
+        variable sTmp, curHold: std_logic := '0';
         begin
         case Mode is
             when "000" =>
@@ -108,6 +117,29 @@ architecture Behavioral of ALU is
                 C <= bitOutput;
                 Overflow <= '0';
                 Cout <= '0';
+            when "100" =>
+              shiftOutput <= A;
+              for i in 0 to to_integer(unsigned(B)) LOOP
+                curHold := '0';
+                sTmp := '0';
+                for j in 0 to 31 LOOP
+                    if(j >= i) then
+                        curHold := A(j);
+                        shiftOutput(j) <= sTmp;
+                        sTmp := curHold XOR '0';
+                    end if;
+                end LOOP;
+              end LOOP;
+              C <= shiftOutput;
+              if(shiftOutput = B"0000_0000_0000_0000_0000_0000_0000_0000") then 
+                Zero <= '1';
+              else 
+                Zero <= '0';
+              end if;
+              Cout <= '0';
+              Overflow <= '0';
+              
+              
             when others => 
                 
         end case; 

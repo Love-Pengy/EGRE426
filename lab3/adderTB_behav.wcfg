@@ -10,29 +10,29 @@
       </db_ref>
    </db_ref_list>
    <zoom_setting>
-      <ZoomStartTime time="0.000 ns"></ZoomStartTime>
-      <ZoomEndTime time="23.738 ns"></ZoomEndTime>
-      <Cursor1Time time="168.998 ns"></Cursor1Time>
+      <ZoomStartTime time="325.764 ns"></ZoomStartTime>
+      <ZoomEndTime time="402.865 ns"></ZoomEndTime>
+      <Cursor1Time time="385.564 ns"></Cursor1Time>
    </zoom_setting>
    <column_width_setting>
       <NameColumnWidth column_width="139"></NameColumnWidth>
-      <ValueColumnWidth column_width="100"></ValueColumnWidth>
+      <ValueColumnWidth column_width="76"></ValueColumnWidth>
    </column_width_setting>
    <WVObjectSize size="7" />
    <wvobject fp_name="/ALUTB/A_sig" type="array">
       <obj_property name="ElementShortName">A_sig[31:0]</obj_property>
       <obj_property name="ObjectShortName">A_sig[31:0]</obj_property>
-      <obj_property name="Radix">SIGNEDDECRADIX</obj_property>
+      <obj_property name="Radix">BINARYRADIX</obj_property>
    </wvobject>
    <wvobject fp_name="/ALUTB/B_sig" type="array">
       <obj_property name="ElementShortName">B_sig[31:0]</obj_property>
       <obj_property name="ObjectShortName">B_sig[31:0]</obj_property>
-      <obj_property name="Radix">SIGNEDDECRADIX</obj_property>
+      <obj_property name="Radix">BINARYRADIX</obj_property>
    </wvobject>
    <wvobject fp_name="/ALUTB/C_sig" type="array">
       <obj_property name="ElementShortName">C_sig[31:0]</obj_property>
       <obj_property name="ObjectShortName">C_sig[31:0]</obj_property>
-      <obj_property name="Radix">SIGNEDDECRADIX</obj_property>
+      <obj_property name="Radix">BINARYRADIX</obj_property>
    </wvobject>
    <wvobject fp_name="/ALUTB/Overflow_sig" type="logic">
       <obj_property name="ElementShortName">Overflow_sig</obj_property>

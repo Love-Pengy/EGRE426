@@ -45,7 +45,9 @@ entity ALU is
         Zero: out std_logic;
         Overflow: out std_logic;
         Cout: out std_logic);
+        
 end ALU;
+
 
 architecture Behavioral of ALU is
 
@@ -76,7 +78,8 @@ architecture Behavioral of ALU is
       PORT MAP(A => X"0000001F", B => twoOutput, Cin => '0', C => shiftIndex, Overflow => open, Cout => open);
       
     process(A, B, Mode,addOverflow,addOutput,subOverflow,subCout,subOutput, bitOutput)
-        variable sTmp, curHold: std_logic := '0';
+        variable curHold, fillVal: std_logic := '0';
+        variable sTmp: std_logic_vector(31 downto 0) := (others => '0');
         begin
         case Mode is
             when "000" =>
@@ -88,6 +91,7 @@ architecture Behavioral of ALU is
               end if;
               Cout <= addCout;
               Overflow <= addOverflow;
+              
             when "001" => 
               C <= subOutput;
               if(subOutput = B"0000_0000_0000_0000_0000_0000_0000_0000") then
@@ -97,6 +101,7 @@ architecture Behavioral of ALU is
               end if;
               Cout <= subCout;
               Overflow <= subOverflow;
+              
             when "010" => 
                 bitOutput <= A AND B;
                 if(bitOutput = B"0000_0000_0000_0000_0000_0000_0000_0000") then 
@@ -107,6 +112,7 @@ architecture Behavioral of ALU is
                 C <= bitOutput;
                 Overflow <= '0';
                 Cout <= '0';
+                
             when "011" =>
                 bitOutput <= A OR B;
                 if(bitOutput = B"0000_0000_0000_0000_0000_0000_0000_0000") then 
@@ -117,21 +123,58 @@ architecture Behavioral of ALU is
                 C <= bitOutput;
                 Overflow <= '0';
                 Cout <= '0';
+                
             when "100" =>
-              shiftOutput <= A;
-              for i in 0 to to_integer(unsigned(B)) LOOP
-                curHold := '0';
-                sTmp := '0';
-                for j in 0 to 31 LOOP
-                    if(j >= i) then
-                        curHold := A(j);
-                        shiftOutput(j) <= sTmp;
-                        sTmp := curHold XOR '0';
-                    end if;
+              sTmp := (others => '0');
+              
+              if(unsigned(B) < 32) then
+               
+                for i in 0 to to_integer(unsigned(shiftIndex)) LOOP
+                    sTmp(i + to_integer(unsigned(B))) := A(i); 
                 end LOOP;
-              end LOOP;
-              C <= shiftOutput;
-              if(shiftOutput = B"0000_0000_0000_0000_0000_0000_0000_0000") then 
+                
+              end if;     
+              
+              C <= sTmp;
+              if(sTmp = B"0000_0000_0000_0000_0000_0000_0000_0000") then 
+                Zero <= '1';
+              else 
+                Zero <= '0';
+              end if;
+              Cout <= '0';
+              Overflow <= '0';
+            when "101" =>
+              sTmp := (others => '0');
+              
+              if(unsigned(B) < 32) then
+               
+                for i in 0 to to_integer(unsigned(shiftIndex)) LOOP
+                    sTmp(i) := A(i + to_integer(unsigned(B))); 
+                end LOOP;
+                
+              end if;     
+              
+              C <= sTmp;
+              if(sTmp = B"0000_0000_0000_0000_0000_0000_0000_0000") then 
+                Zero <= '1';
+              else 
+                Zero <= '0';
+              end if;
+              Cout <= '0';
+              Overflow <= '0';
+            when "110" =>
+              sTmp := (others => '0');
+              
+              if(unsigned(B) < 32) then
+               
+                for i in 0 to to_integer(unsigned(shiftIndex)) LOOP
+                    sTmp(i + to_integer(unsigned(B))) := A(i); 
+                end LOOP;
+                
+              end if;     
+              
+              C <= sTmp;
+              if(sTmp = B"0000_0000_0000_0000_0000_0000_0000_0000") then 
                 Zero <= '1';
               else 
                 Zero <= '0';
@@ -139,7 +182,26 @@ architecture Behavioral of ALU is
               Cout <= '0';
               Overflow <= '0';
               
+            when "111" =>
+              fillVal := A(31);
+              sTmp := (others => fillVal);
               
+              if(unsigned(B) < 32) then
+               
+                for i in 0 to to_integer(unsigned(shiftIndex)) LOOP
+                    sTmp(i) := A(i + to_integer(unsigned(B))); 
+                end LOOP;
+                
+              end if;     
+              
+              C <= sTmp;
+              if(sTmp = B"0000_0000_0000_0000_0000_0000_0000_0000") then 
+                Zero <= '1';
+              else 
+                Zero <= '0';
+              end if;
+              Cout <= '0';
+              Overflow <= '0';
             when others => 
                 
         end case; 

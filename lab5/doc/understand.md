@@ -14,6 +14,9 @@
 + Given series of byte addresses from text file one address per line
 + Compute hit or miss rate given args and  
 
+## Direct Mapping
+    + You have a tag and a block
+    + 
 # Notes
 
 + know if its present in cache/memory 

@@ -6,6 +6,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <time.h>
 
 #define MAX_ADDR_SIZE 20
 
@@ -13,6 +14,17 @@ int blockSize = 0;
 int blockAmt = 0;
 int associativity = 0;
 char inputFileName[1024] = "";
+bool verbose = 0;
+
+typedef enum { DIRECT, RANDOM, LRU } rPolicy;
+
+rPolicy replacementPolicy = DIRECT;
+
+typedef struct {
+  int32_t tag;
+  int use;
+  int val;
+} cacheTag;
 
 // tag index offset
 struct address {
@@ -49,7 +61,6 @@ void calcAddress(struct address *addr) {
 
   int numOffsetBits = calcOffsetBits();
   int numIndexBits = calcIndexBits();
-  printf("offset: %d, index: %d\n", numOffsetBits, numIndexBits);
   uint32_t tmpAddress = addr->fullAddress;
   int mask = 0;
 
@@ -69,15 +80,70 @@ void calcAddress(struct address *addr) {
   addr->tag = tmpAddress;
 }
 
+void printCache(cacheTag **cache) {
+
+  // print cache
+  /*switch (replacementPolicy) {*/
+  /*case (LRU):*/
+  for (int i = 0; i < associativity; i++) {
+    printf("%d: { ", i);
+    for (int j = 0; j < pow(2, calcIndexBits()); j++) {
+      printf("%d ", cache[i][j].val);
+    }
+    printf("}\n");
+  }
+}
+
 void calcHitMiss(int *hit, int *miss, FILE *fptr) {
+  int hitVal = 0;
+  bool replaced = false;
+  int missVal = 0;
   struct address currAddr;
   currAddr.fullAddress = 0;
   unsigned char currHex = 0;
-  int *cache = malloc(sizeof(int) * MAX_ADDR_SIZE);
+
   uint8_t specifier = 0b00;
   bool active = false;
   char buffer[5] = "";
+  bool currHit = false;
   int i = 0;
+
+  // ====== filler ============
+  cacheTag **cacheArr = malloc(sizeof(cacheTag *) * associativity);
+  if (replacementPolicy == LRU) {
+    for (int i = 0; i < associativity; i++) {
+      cacheArr[i] = malloc(sizeof(cacheTag) * ((int)pow(2, calcIndexBits())));
+      for (int j = 0; j < (int)pow(2, calcIndexBits()); j++) {
+        cacheArr[i][j].tag = -100;
+        cacheArr[i][j].use = -1;
+        cacheArr[i][j].val = 0;
+      }
+    }
+  } else {
+    for (int i = 0; i < associativity; i++) {
+      cacheArr[i] = malloc(sizeof(cacheTag) * ((int)pow(2, calcIndexBits())));
+      for (int j = 0; j < (int)pow(2, calcIndexBits()); j++) {
+        cacheArr[i][j].tag = -100;
+        cacheArr[i][j].val = 0;
+      }
+    }
+  }
+  //===========================
+
+  //--------------------------------------------------------------------
+  // Filler To Test Cache
+  /*for (int i = 0; i < associativity; i++) {*/
+  /*  cacheArr[i] = malloc(sizeof(int) * ((int)pow(2, calcIndexBits())));*/
+  /*  for (int j = 0; j < (int)pow(2, calcIndexBits()); j++) {*/
+  /*    if ((j % 2) == 0) {*/
+  /*      cacheArr[i][j] = 0x111;*/
+  /*    } else {*/
+  /*      cacheArr[i][j] = 0x1111;*/
+  /*    }*/
+  /*  }*/
+  /*}*/
+  //-------------------------------------------------------------------
+
   while (!feof(fptr)) {
     currAddr.tag = 0;
     currAddr.index = 0;
@@ -90,22 +156,79 @@ void calcHitMiss(int *hit, int *miss, FILE *fptr) {
         continue;
       }
       active = true;
-      buffer[i] = currHex; 
+      buffer[i] = currHex;
       i++;
-      //currAddr.fullAddress |= hexMapping(currHex);
+      // currAddr.fullAddress |= hexMapping(currHex);
     }
-    if(active){
-      for(int i = 0; i < strlen(buffer); i++){
-        currAddr.fullAddress |= (hexMapping(buffer[i]) << (((strlen(buffer)-1) - i) * 4)); 
+    if (active) {
+      for (int i = 0; i < strlen(buffer); i++) {
+        currAddr.fullAddress |=
+            (hexMapping(buffer[i]) << (((strlen(buffer) - 1) - i) * 4));
       }
       calcAddress(&currAddr);
-      printf("%d\n", currAddr.tag);
+      // check for hit
+      for (int i = 0; i < associativity; i++) {
+        if (cacheArr[i][currAddr.index].tag == currAddr.tag) {
+          currHit = true;
+        }
+      }
+      // replace functionality
+      if (!currHit) {
+        switch (replacementPolicy) {
+        case (DIRECT):
+          cacheArr[0][currAddr.index].tag = currAddr.tag;
+          cacheArr[0][currAddr.index].val = currAddr.fullAddress;
+          break;
+        case (RANDOM):
+          cacheArr[rand() % associativity][currAddr.index].tag = currAddr.tag;
+          cacheArr[rand() % associativity][currAddr.index].val =
+              currAddr.fullAddress;
+          break;
+        case (LRU):
+          replaced = false;
+          for (int i = 0; i < associativity; i++) {
+            if (cacheArr[i][currAddr.index].use == -1) {
+              cacheArr[i][currAddr.index].tag = currAddr.tag;
+              cacheArr[i][currAddr.index].val = currAddr.fullAddress;
+              cacheArr[i][currAddr.index].use = associativity;
+              for (int j = 0; j < associativity; j++) {
+                if (cacheArr[j][currAddr.index].use != -1) {
+                  cacheArr[j][currAddr.index].use--;
+                }
+              }
+              replaced = true;
+              break;
+            }
+          }
+          if (!replaced) {
+            for (int i = 0; i < associativity; i++) {
+              if (cacheArr[i][currAddr.index].use == 0) {
+                cacheArr[i][currAddr.index].tag = currAddr.tag;
+                cacheArr[i][currAddr.index].val = currAddr.fullAddress;
+                cacheArr[i][currAddr.index].use = associativity;
+              } else {
+                cacheArr[i][currAddr.index].use--;
+              }
+            }
+          }
+        }
+      }
+      currHit ? hitVal++ : missVal++;
+      currHit = false;
+      memset(&currAddr, 0, sizeof(struct address));
+      specifier = 0b00;
+      active = false;
     }
-    memset(&currAddr, 0, sizeof(struct address));
-    specifier = 0b00; 
-    active = false;
+    *hit = hitVal;
+    *miss = missVal;
   }
-  free(cache);
+  if (verbose) {
+    printCache(cacheArr);
+  }
+  for (int i = 0; i < associativity; i++) {
+    free(cacheArr[i]);
+  }
+  free(cacheArr);
 }
 
 void throwCmdLineError(char *error) {
@@ -135,8 +258,12 @@ void cmdLineParser(char **input) {
       printf("    -assoc <val>  specifies associativity where val is te amount "
              "of ways\n");
       printf("    -blocksize <val>  specifies block size \n");
-      printf("    -blockAmt <val>  specifies amount of blocks\n");
-
+      printf("    -v <val>  0 -> don't print cache\n");
+      printf("              1 -> print cache\n");
+      printf("    -blockamt <val>  specifies amount of blocks\n");
+      printf("    -policy <val>  0 -> direct\n");
+      printf("                   1 -> random\n");
+      printf("                   2 -> LRU\n");
       exit(EXIT_SUCCESS);
     } else if (strcmp(input[i], "-assoc") == 0) {
       i++;
@@ -161,6 +288,16 @@ void cmdLineParser(char **input) {
       if ((i < arrayLength) && !startsWithHyphen(input[i])) {
         blockAmt = atoi(input[i]);
       }
+    } else if (strcmp(input[i], "-policy") == 0) {
+      i++;
+      if ((i < arrayLength) && !startsWithHyphen(input[i])) {
+        replacementPolicy = atoi(input[i]);
+      }
+    } else if (strcmp(input[i], "-v") == 0) {
+      i++;
+      if ((i < arrayLength) && !startsWithHyphen(input[i])) {
+        verbose = atoi(input[i]);
+      }
     } else {
       if (fileSpecified) {
         throwCmdLineError("Multiple Files Specified");
@@ -176,7 +313,7 @@ void cmdLineParser(char **input) {
 }
 
 int main(int argc, char **argv) {
-
+  srand(time(NULL));
   cmdLineParser(argv);
 
   FILE *fptr = fopen(inputFileName, "r");
@@ -187,7 +324,15 @@ int main(int argc, char **argv) {
 
   int *hit = malloc(sizeof(int));
   int *miss = malloc(sizeof(int));
+  *hit = 0;
+  *miss = 0;
   calcHitMiss(hit, miss, fptr);
-
+  printf("hit: %d, miss: %d\n", *hit, *miss);
+  printf("hit rate: %.2f%%\n", ((double)(*hit / (double)(*miss + *hit))) * 100);
+  printf("miss rate: %.2f%%\n",
+         ((double)(*miss / (double)(*hit + *miss))) * 100);
+  free(hit);
+  free(miss);
+  fclose(fptr);
   return (0);
 }
